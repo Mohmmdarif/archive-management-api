@@ -13,8 +13,137 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// USER MANAGE
+enum Gender {
+  PRIA
+  WANITA
+}
+
 model User {
-  id    Int    @id @default(autoincrement())
-  name  String
-  email String @unique
+  id            Int      @id @default(autoincrement())
+  nip           Int      @unique
+  gambar_profil String
+  jenis_kelamin Gender
+  nama_lengkap  String
+  email         String   @unique
+  password      String
+  role_id       Int
+  role          Role     @relation(fields: [role_id], references: [id])
+  jabatan       String
+  no_telp       String
+  status_aktif  Boolean  @default(true)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now())
+
+  Surat       Surat[]
+  Surat_Masuk Surat_Masuk[]
+}
+
+model Role {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  users User[]
+}
+
+// SURAT MANAGE
+model Type_Surat {
+  id        Int    @id @default(autoincrement())
+  nama_type String
+
+  Surat Surat[]
+}
+
+model Kriteria_Surat {
+  id            Int      @id @default(autoincrement())
+  nama_kriteria String
+  keterangan    String
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now())
+
+  Surat Surat[]
+}
+
+model Jenis_Surat {
+  id         Int      @id @default(autoincrement())
+  nama_jenis String
+  keterangan String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  Surat Surat[]
+}
+
+model Kategori_Surat {
+  id            Int      @id @default(autoincrement())
+  nama_kategori String
+  keterangan    String
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now())
+
+  Surat_Masuk Surat_Masuk[]
+}
+
+model Surat {
+  id                Int            @id @default(autoincrement())
+  no_surat          String
+  id_type_surat     Int
+  type_surat        Type_Surat     @relation(fields: [id_type_surat], references: [id])
+  perihal_surat     String
+  tanggal_surat     DateTime
+  id_jenis_surat    Int
+  jenis_surat       Jenis_Surat    @relation(fields: [id_jenis_surat], references: [id])
+  id_kriteria_surat Int
+  kriteria_surat    Kriteria_Surat @relation(fields: [id_kriteria_surat], references: [id])
+  pengirim_surat    String
+  id_penerima_surat Int
+  penerima_surat    User           @relation(fields: [id_penerima_surat], references: [id])
+  status_surat      Boolean        @default(false)
+  filename          String
+  path_file         String
+  created_at        DateTime       @default(now())
+  updated_at        DateTime       @default(now())
+
+  surat_keluar Surat_Keluar[]
+
+  Surat_Masuk Surat_Masuk[]
+}
+
+model Surat_Keluar {
+  id            Int      @id @default(autoincrement())
+  id_surat      Int
+  surat         Surat    @relation(fields: [id_surat], references: [id])
+  tujuan_surat  String
+  tanggal_kirim DateTime
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now())
+}
+
+model Surat_Masuk {
+  id                      Int              @id @default(autoincrement())
+  id_surat                Int
+  surat                   Surat            @relation(fields: [id_surat], references: [id])
+  no_agenda               Int
+  id_kategori_surat       Int
+  kategori_surat          Kategori_Surat   @relation(fields: [id_kategori_surat], references: [id])
+  jumlah_lampiran         Int
+  id_user_disposisi       Int
+  user_disposisi          User             @relation(fields: [id_user_disposisi], references: [id])
+  tanggal_terima          DateTime
+  id_status_disposisi     Int
+  status_disposisi        Status_Disposisi @relation(fields: [id_status_disposisi], references: [id])
+  tanggal_ajuan_disposisi DateTime         @default(now())
+  keterangan              String
+  created_at              DateTime         @default(now())
+  updated_at              DateTime         @default(now())
+}
+
+model Status_Disposisi {
+  id          Int      @id @default(autoincrement())
+  nama_status String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now())
+
+  Surat_Masuk Surat_Masuk[]
 }

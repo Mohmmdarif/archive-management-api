@@ -6,6 +6,8 @@
 
 generator client {
   provider = "prisma-client-js"
+  // output        = "../src/prisma/client"
+  // binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -14,26 +16,31 @@ datasource db {
 }
 
 // USER MANAGE
-enum Gender {
-  PRIA
-  WANITA
+model Jenis_Kelamin {
+  id            Int      @id @default(autoincrement())
+  jenis_kelamin String   @unique
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now())
+
+  users User[]
 }
 
 model User {
-  id            Int      @id @default(autoincrement())
-  nip           Int      @unique
-  gambar_profil String
-  jenis_kelamin Gender
-  nama_lengkap  String
-  email         String   @unique
-  password      String
-  role_id       Int
-  role          Role     @relation(fields: [role_id], references: [id])
-  jabatan       String
-  no_telp       String
-  status_aktif  Boolean  @default(true)
-  created_at    DateTime @default(now())
-  updated_at    DateTime @default(now())
+  id               Int           @id @default(autoincrement())
+  nip              String        @unique
+  gambar_profil    String?
+  id_jenis_kelamin Int
+  jenis_kelamin    Jenis_Kelamin @relation(fields: [id_jenis_kelamin], references: [id])
+  nama_lengkap     String
+  email            String        @unique
+  password         String
+  role_id          Int
+  role             Role          @relation(fields: [role_id], references: [id])
+  jabatan          String?
+  no_telp          String?
+  status_aktif     Boolean       @default(true)
+  created_at       DateTime      @default(now())
+  updated_at       DateTime      @default(now())
 
   Surat       Surat[]
   Surat_Masuk Surat_Masuk[]
@@ -41,6 +48,7 @@ model User {
 
 model Role {
   id         Int      @id @default(autoincrement())
+  nama_role  String   @unique
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 

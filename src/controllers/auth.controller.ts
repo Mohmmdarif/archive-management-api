@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
-import bcrypt from "bcrypt";
+import { NextFunction, Request, Response } from "express";
 import * as Yup from "yup";
 import {
   loginSchema,
   registerSchema,
 } from "../utils/validations/auth.validation";
-import { AuthRepository } from "../repositories/auth.repository";
+import { AuthService } from "../services/auth.service";
+import { CustomError } from "../utils/customError";
 
 type TRegisterBody = Yup.InferType<typeof registerSchema>;
 type TLoginBody = Yup.InferType<typeof loginSchema>;
@@ -18,73 +18,49 @@ interface IRequestLogin extends Request {
 }
 
 export const AuthController = {
-  Register: async (req: IRequestRegister, res: Response) => {
+  Register: async (
+    req: IRequestRegister,
+    res: Response,
+    _next: NextFunction
+  ) => {
     try {
-      const { nama_lengkap, email, nip, password, id_jenis_kelamin, role_id } =
-        req.body;
-
-      const isValidate = await registerSchema.validate({
-        nama_lengkap,
-        email,
-        nip,
-        password,
-        id_jenis_kelamin,
-        role_id,
+      await registerSchema.validate(req.body, {
+        abortEarly: false,
       });
 
-      if (!isValidate) {
-        throw new Error("Invalid input data");
-      }
-
-      const existingUser = await AuthRepository.FindByEmail(email);
-
-      if (existingUser) {
-        throw new Error("Email already registered");
-      }
-
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      const user = await AuthRepository.Create({
-        nama_lengkap,
-        email,
-        nip,
-        password: hashedPassword,
-        id_jenis_kelamin,
-        role_id,
-      });
+      const user = await AuthService.CreateUser(req.body);
 
       res.status(201).json({
+        success: true,
         message: "User successfully registered",
         data: user,
       });
     } catch (error) {
-      const err = error as Error;
-
-      res.status(500).json({
-        data: err.message,
-        message: "Failed to register user",
-      });
+      if (error instanceof Yup.ValidationError) {
+        _next(new CustomError(400, "Validation failed", error.errors));
+      }
+      _next(error);
     }
   },
-  Login: async (req: IRequestLogin, res: Response) => {
+
+  Login: async (req: IRequestLogin, res: Response, _next: NextFunction) => {
     try {
-      const { email, password } = req.body;
-
-      const isValidate = await loginSchema.validate({
-        email,
-        password,
+      await loginSchema.validate(req.body, {
+        abortEarly: false,
       });
 
-      if (!isValidate) {
-        throw new Error("Invalid input data");
-      }
+      const user = await AuthService.Login(req.body);
+
+      res.status(200).json({
+        success: true,
+        message: "User successfully logged in",
+        data: user,
+      });
     } catch (error) {
-      const err = error as Error;
-
-      res.status(500).json({
-        data: err.message,
-        message: "Failed to login",
-      });
+      if (error instanceof Yup.ValidationError) {
+        _next(new CustomError(400, "Validation failed", error.errors));
+      }
+      _next(error);
     }
   },
   Me: async (req: Request, res: Response) => {

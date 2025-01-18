@@ -7,4 +7,9 @@ interface IRegisterPayload {
   role_id: number;
 }
 
-export type { IRegisterPayload };
+interface ILoginPayload {
+  email: string;
+  password: string;
+}
+
+export type { IRegisterPayload, ILoginPayload };

@@ -1,7 +1,8 @@
 import express, { Request, Response } from "express";
-import authRoutes from "./routes/auth.routes";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
-import { JWT_SECRET, PORT } from "./utils/env";
+import { PORT } from "./utils/env";
+import authRoutes from "./routes/auth.route";
+import userRoutes from "./routes/user.route";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
 app.use(
   (err: Error, req: Request, res: Response, next: express.NextFunction) => {

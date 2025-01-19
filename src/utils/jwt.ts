@@ -11,7 +11,6 @@ export interface IUserToken
     | "email"
     | "password"
     | "id_jenis_kelamin"
-    | "role_id"
     | "jabatan"
     | "no_telp"
     | "status_aktif"

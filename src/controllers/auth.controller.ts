@@ -63,7 +63,4 @@ export const AuthController = {
       _next(error);
     }
   },
-  Me: async (req: Request, res: Response) => {
-    res.send("Me");
-  },
 };

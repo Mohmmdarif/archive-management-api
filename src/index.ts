@@ -1,8 +1,7 @@
 import express, { Request, Response } from "express";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 import { PORT } from "./utils/env";
-import authRoutes from "./routes/auth.route";
-import userRoutes from "./routes/user.route";
+import { authRoutes, userRoutes, categoryRoutes } from "./routes/index";
 
 const app = express();
 
@@ -16,6 +15,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/categories", categoryRoutes);
 
 app.use(
   (err: Error, req: Request, res: Response, next: express.NextFunction) => {

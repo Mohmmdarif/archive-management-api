@@ -26,7 +26,9 @@ export const AuthService = {
       role_id,
     });
 
-    return user;
+    const { password: userPassword, ...userWithoutPassword } = user;
+
+    return userWithoutPassword;
   },
 
   Login: async (payload: ILoginPayload) => {

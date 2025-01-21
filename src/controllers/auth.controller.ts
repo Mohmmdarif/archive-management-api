@@ -6,6 +6,7 @@ import {
 } from "../utils/validations/auth.validation";
 import { AuthService } from "../services/auth.service";
 import { CustomError } from "../utils/customError";
+import { IUser } from "../interfaces/user.interface";
 
 type TRegisterBody = Yup.InferType<typeof registerSchema>;
 type TLoginBody = Yup.InferType<typeof loginSchema>;
@@ -24,7 +25,7 @@ export const AuthController = {
     _next: NextFunction
   ) => {
     try {
-      await registerSchema.validate(req.body, {
+      await registerSchema.validate(req.body as unknown as IUser, {
         abortEarly: false,
       });
 

@@ -29,5 +29,6 @@ export const generateToken = (user: IUserToken): string => {
 
 export const getUserData = (token: string) => {
   const user = jwt.verify(token, JWT_SECRET) as IUserToken;
+
   return user;
 };

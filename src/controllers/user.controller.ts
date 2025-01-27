@@ -25,14 +25,10 @@ export const UserController = {
       const userId = req.user?.id;
 
       if (!userId) {
-        throw new CustomError(403, "User not found");
+        throw new CustomError(403, "User not found!");
       }
 
       const user = await UserService.Me(userId);
-
-      if (!user) {
-        throw new CustomError(403, "User not found");
-      }
 
       res.status(200).json({
         success: true,

@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { CategoryService } from "../services/category.service";
 import { CustomError } from "../utils/customError";
 import * as Yup from "yup";
-import { categorySchema } from "../utils/validations/category.validation";
-import { ICategoryPayload } from "../interfaces/category.interface";
+import { categorySchema } from "../utils/validations/detail.validation";
+import { ICategoryPayload } from "../interfaces/detail.interface";
 
 export const CategoryController = {
   GetCategories: async (req: Request, res: Response, _next: NextFunction) => {
@@ -37,7 +37,7 @@ export const CategoryController = {
       });
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
-        _next(new CustomError(400, "Validation failed", error.errors));
+        _next(new CustomError(400, "Validation failed!", error.errors));
       }
       _next(error);
     }
@@ -63,7 +63,7 @@ export const CategoryController = {
       });
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
-        _next(new CustomError(400, "Validation failed", error.errors));
+        _next(new CustomError(400, "Validation failed!", error.errors));
       }
       _next(error);
     }

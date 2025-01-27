@@ -1,11 +1,21 @@
 import prisma from "../db";
-import { ICategoryPayload } from "../interfaces/category.interface";
+import { ICategoryPayload } from "../interfaces/detail.interface";
 
 export const CategoryRepository = {
   FindAll: async () => {
     const categories = await prisma.kategori_Surat.findMany();
 
     return categories;
+  },
+
+  FindById: async (categoryId: number) => {
+    const category = await prisma.kategori_Surat.findUnique({
+      where: {
+        id: categoryId,
+      },
+    });
+
+    return category;
   },
 
   Create: async (payload: ICategoryPayload) => {

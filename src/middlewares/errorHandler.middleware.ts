@@ -17,9 +17,17 @@ export const errorHandler = (
     });
   }
 
+  if (err instanceof Error) {
+    return res.status(400).json({
+      success: false,
+      message: err.message,
+      details: null,
+    });
+  }
+
   return res.status(500).json({
     success: false,
-    message: "Something went wrong",
+    message: "Something went wrong!",
     details: null,
   });
 };

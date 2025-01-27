@@ -1,9 +1,15 @@
-import express, { Request, Response } from "express";
+import express, { Express, Request, Response } from "express";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 import { PORT } from "./utils/env";
-import { authRoutes, userRoutes, categoryRoutes } from "./routes/index";
+import {
+  authRoutes,
+  userRoutes,
+  categoryRoutes,
+  typesRoutes,
+  criteriaRoutes,
+} from "./routes/index";
 
-const app = express();
+const app: Express = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -16,6 +22,8 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/types", typesRoutes);
+app.use("/api/criterias", criteriaRoutes);
 
 app.use(
   (err: Error, req: Request, res: Response, next: express.NextFunction) => {

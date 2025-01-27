@@ -1,28 +1,28 @@
 import express from "express";
 import { verifyToken } from "../middlewares/auth.middleware";
 import rbacMiddleware, { UserRole } from "../middlewares/rbac.middleware";
-import { CategoryController } from "../controllers/category.controller";
+import { CriteriaController } from "../controllers/criteria.controller";
 
 const router = express.Router();
 
-router.get("/", verifyToken, CategoryController.GetCategories);
+router.get("/", verifyToken, CriteriaController.GetCriteria);
 router.post(
   "/create",
   verifyToken,
   rbacMiddleware([UserRole.KoordinatorTU]),
-  CategoryController.CreateCategory
+  CriteriaController.CreateCriteria
 );
 router.put(
   "/:id",
   verifyToken,
   rbacMiddleware([UserRole.KoordinatorTU]),
-  CategoryController.UpdateCategory
+  CriteriaController.UpdateCriteria
 );
 router.delete(
   "/:id",
   verifyToken,
   rbacMiddleware([UserRole.KoordinatorTU]),
-  CategoryController.DeleteCategory
+  CriteriaController.DeleteCriteria
 );
 
 export default router;

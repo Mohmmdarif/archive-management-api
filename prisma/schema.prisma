@@ -42,8 +42,10 @@ model User {
   created_at       DateTime      @default(now())
   updated_at       DateTime      @default(now())
 
-  Surat       Surat[]
-  Surat_Masuk Surat_Masuk[]
+  Surat              Surat[]
+  Surat_Masuk        Surat_Masuk[]
+  disposisi_pengaju  Disposisi[]   @relation("Disposisi_pengaju")
+  disposisi_penerima Disposisi[]   @relation("Disposisi_penerima")
 }
 
 model Role {
@@ -145,6 +147,24 @@ model Surat_Masuk {
   keterangan              String
   created_at              DateTime         @default(now())
   updated_at              DateTime         @default(now())
+
+  disposisi Disposisi[]
+}
+
+model Disposisi {
+  id                  Int              @id @default(autoincrement())
+  id_surat_masuk      Int
+  surat_masuk         Surat_Masuk      @relation(fields: [id_surat_masuk], references: [id])
+  id_pengaju          Int
+  pengaju             User             @relation(name: "Disposisi_pengaju", fields: [id_pengaju], references: [id])
+  id_penerima         Int
+  penerima            User             @relation(name: "Disposisi_penerima", fields: [id_penerima], references: [id])
+  pesan_disposisi     String
+  id_status_disposisi Int
+  status_disposisi    Status_Disposisi @relation(fields: [id_status_disposisi], references: [id])
+  tanggal_disposisi   DateTime         @default(now())
+  created_at          DateTime         @default(now())
+  updated_at          DateTime         @default(now())
 }
 
 model Status_Disposisi {
@@ -154,4 +174,5 @@ model Status_Disposisi {
   updated_at  DateTime @default(now())
 
   Surat_Masuk Surat_Masuk[]
+  Disposisi   Disposisi[]
 }

@@ -8,7 +8,7 @@ export const UserRepository = {
     return users;
   },
 
-  FindById: async (userId: number) => {
+  FindById: async (userId: string) => {
     const user = await prisma.user.findUnique({
       where: {
         id: userId,
@@ -18,7 +18,7 @@ export const UserRepository = {
     return user;
   },
 
-  Update: async (userId: number, payload: IUser) => {
+  Update: async (userId: string, payload: IUser) => {
     const updatedUser = await prisma.user.update({
       where: {
         id: userId,
@@ -29,7 +29,7 @@ export const UserRepository = {
     return updatedUser;
   },
 
-  Delete: async (userId: number) => {
+  Delete: async (userId: string) => {
     await prisma.user.delete({
       where: {
         id: userId,

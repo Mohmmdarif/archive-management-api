@@ -13,7 +13,7 @@ export const UserService = {
     return usersWithoutPassword;
   },
 
-  Me: async (userId: number) => {
+  Me: async (userId: string) => {
     const user = await UserRepository.FindById(userId);
 
     if (!user) {
@@ -25,7 +25,7 @@ export const UserService = {
     return userData;
   },
 
-  UpdateProfile: async (userId: number, payload: IUser) => {
+  UpdateProfile: async (userId: string, payload: IUser) => {
     const user = await UserRepository.FindById(userId);
 
     if (!user) {
@@ -39,7 +39,7 @@ export const UserService = {
     return updatedUserFields;
   },
 
-  DeleteUser: async (userId: number) => {
+  DeleteUser: async (userId: string) => {
     const user = await UserRepository.FindById(userId);
 
     if (!user) {

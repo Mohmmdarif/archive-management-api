@@ -1,5 +1,5 @@
 export interface IUser {
-  id: number;
+  id: string;
   nama_lengkap: string;
   nip: string;
   no_telp: string;

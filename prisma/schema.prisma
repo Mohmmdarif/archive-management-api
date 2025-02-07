@@ -26,7 +26,7 @@ model Jenis_Kelamin {
 }
 
 model User {
-  id               Int           @id @default(autoincrement())
+  id               String        @id @default(cuid())
   nip              String        @unique
   gambar_profil    String?
   id_jenis_kelamin Int
@@ -96,7 +96,7 @@ model Kategori_Surat {
 }
 
 model Surat {
-  id                Int            @id @default(autoincrement())
+  id                String         @id @default(cuid())
   no_surat          String
   id_type_surat     Int
   type_surat        Type_Surat     @relation(fields: [id_type_surat], references: [id])
@@ -107,7 +107,7 @@ model Surat {
   id_kriteria_surat Int
   kriteria_surat    Kriteria_Surat @relation(fields: [id_kriteria_surat], references: [id])
   pengirim_surat    String
-  id_penerima_surat Int
+  id_penerima_surat String
   penerima_surat    User           @relation(fields: [id_penerima_surat], references: [id])
   status_surat      Boolean        @default(false)
   filename          String
@@ -121,8 +121,8 @@ model Surat {
 }
 
 model Surat_Keluar {
-  id            Int      @id @default(autoincrement())
-  id_surat      Int
+  id            String   @id @default(cuid())
+  id_surat      String
   surat         Surat    @relation(fields: [id_surat], references: [id])
   tujuan_surat  String
   tanggal_kirim DateTime
@@ -131,14 +131,14 @@ model Surat_Keluar {
 }
 
 model Surat_Masuk {
-  id                      Int              @id @default(autoincrement())
-  id_surat                Int
+  id                      String           @id @default(cuid())
+  id_surat                String
   surat                   Surat            @relation(fields: [id_surat], references: [id])
   no_agenda               Int
   id_kategori_surat       Int
   kategori_surat          Kategori_Surat   @relation(fields: [id_kategori_surat], references: [id])
   jumlah_lampiran         Int
-  id_user_disposisi       Int
+  id_user_disposisi       String
   user_disposisi          User             @relation(fields: [id_user_disposisi], references: [id])
   tanggal_terima          DateTime
   id_status_disposisi     Int
@@ -152,12 +152,12 @@ model Surat_Masuk {
 }
 
 model Disposisi {
-  id                  Int              @id @default(autoincrement())
-  id_surat_masuk      Int
+  id                  String           @id @default(cuid())
+  id_surat_masuk      String
   surat_masuk         Surat_Masuk      @relation(fields: [id_surat_masuk], references: [id])
-  id_pengaju          Int
+  id_pengaju          String
   pengaju             User             @relation(name: "Disposisi_pengaju", fields: [id_pengaju], references: [id])
-  id_penerima         Int
+  id_penerima         String
   penerima            User             @relation(name: "Disposisi_penerima", fields: [id_penerima], references: [id])
   pesan_disposisi     String
   id_status_disposisi Int

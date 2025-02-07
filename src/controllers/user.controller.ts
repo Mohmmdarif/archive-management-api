@@ -52,7 +52,7 @@ export const UserController = {
       const userId = req.params.id;
 
       const updatedUser = await UserService.UpdateProfile(
-        parseInt(userId),
+        userId,
         req.body as IUser
       );
 
@@ -73,7 +73,7 @@ export const UserController = {
     try {
       const userId = req.params.id;
 
-      const deletedUser = await UserService.DeleteUser(parseInt(userId));
+      const deletedUser = await UserService.DeleteUser(userId);
 
       res.status(200).json({
         success: true,

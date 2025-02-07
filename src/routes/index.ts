@@ -3,5 +3,13 @@ import userRoutes from "./user.route";
 import categoryRoutes from "./category.route";
 import typesRoutes from "./types.route";
 import criteriaRoutes from "./criteria.route";
+import disposisiRoutes from "./disposisi.route";
 
-export { authRoutes, userRoutes, categoryRoutes, typesRoutes, criteriaRoutes };
+export {
+  authRoutes,
+  userRoutes,
+  categoryRoutes,
+  typesRoutes,
+  criteriaRoutes,
+  disposisiRoutes,
+};

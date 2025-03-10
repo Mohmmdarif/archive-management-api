@@ -5,23 +5,23 @@ import { CategoryController } from "../controllers/category.controller";
 
 const router = express.Router();
 
-router.get("/", verifyToken, CategoryController.GetCategories);
+router.get("/", CategoryController.GetCategories);
 router.post(
   "/create",
-  verifyToken,
-  rbacMiddleware([UserRole.KoordinatorTU]),
+
+  // rbacMiddleware([UserRole.KoordinatorTU]),
   CategoryController.CreateCategory
 );
 router.put(
   "/:id",
-  verifyToken,
-  rbacMiddleware([UserRole.KoordinatorTU]),
+
+  // rbacMiddleware([UserRole.KoordinatorTU]),
   CategoryController.UpdateCategory
 );
 router.delete(
   "/:id",
-  verifyToken,
-  rbacMiddleware([UserRole.KoordinatorTU]),
+
+  // rbacMiddleware([UserRole.KoordinatorTU]),
   CategoryController.DeleteCategory
 );
 

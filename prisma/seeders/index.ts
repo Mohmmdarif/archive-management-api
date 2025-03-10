@@ -1,13 +1,21 @@
 import { seedJenisKelamin } from "./seed.jenis_kelamin";
+import { seedJenisSurat } from "./seed.jenis_surat";
+import { seedKategoriSurat } from "./seed.kategori_surat";
+import { seedKriteriaSurat } from "./seed.kriteria_surat";
 import { seedRoles } from "./seed.roles";
+import { seedTypeSurat } from "./seed.type_surat";
 import { seedUser } from "./seed.user";
 
 async function main() {
-  console.log("Seeders running...");
+  console.log("Seeders are running...");
   await seedJenisKelamin();
   await seedRoles();
   await seedUser();
-  console.log("Seeders finished!");
+  await seedTypeSurat();
+  await seedJenisSurat();
+  await seedKriteriaSurat();
+  await seedKategoriSurat();
+  console.log("Seeders successfully generated!");
 }
 
 main().catch((e) => {

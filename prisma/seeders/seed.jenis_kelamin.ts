@@ -14,5 +14,5 @@ export async function seedJenisKelamin() {
     data: jenisKelamin,
     skipDuplicates: true,
   });
-  console.log("Seed jenis kelamin selesai!");
+  console.log("--- jenis kelamin ---");
 }

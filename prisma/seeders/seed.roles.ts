@@ -12,5 +12,5 @@ export async function seedRoles() {
     data: roles,
     skipDuplicates: true,
   });
-  console.log("Seed roles selesai!");
+  console.log("--- roles ---");
 }

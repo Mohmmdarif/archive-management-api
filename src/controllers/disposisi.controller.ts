@@ -17,6 +17,8 @@ export const DisposisiController = {
       );
 
       res.status(201).json({
+        success: true,
+        message: "Disposisi created successfully",
         data: disposisi,
       });
     } catch (error) {

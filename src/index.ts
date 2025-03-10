@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from "express";
+import cors from "cors";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 import { PORT } from "./utils/env";
 import {
@@ -7,12 +8,19 @@ import {
   categoryRoutes,
   typesRoutes,
   criteriaRoutes,
+  suratRoutes,
 } from "./routes/index";
 
 const app: Express = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: "http://localhost:5173", // URL of the Frontend
+    credentials: true, // Required to allow cookies with the requests
+  })
+);
 
 // Routes
 app.get("/", (req: Request, res: Response) => {
@@ -24,6 +32,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/types", typesRoutes);
 app.use("/api/criterias", criteriaRoutes);
+app.use("/api/surat", express.static("uploads"), suratRoutes);
 
 app.use(
   (err: Error, req: Request, res: Response, next: express.NextFunction) => {

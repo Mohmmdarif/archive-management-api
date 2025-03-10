@@ -4,6 +4,7 @@ import categoryRoutes from "./category.route";
 import typesRoutes from "./types.route";
 import criteriaRoutes from "./criteria.route";
 import disposisiRoutes from "./disposisi.route";
+import suratRoutes from "./surat.route";
 
 export {
   authRoutes,
@@ -12,4 +13,5 @@ export {
   typesRoutes,
   criteriaRoutes,
   disposisiRoutes,
+  suratRoutes,
 };

@@ -11,6 +11,8 @@ export const registerSchema = Yup.object().shape({
   jabatan: Yup.string().optional(),
   no_telp: Yup.string().optional(),
 });
+// .strict()
+// .noUnknown(true, "Field tidak valid");
 
 export const loginSchema = Yup.object().shape({
   email: Yup.string().email().required("Email harus diisi"),

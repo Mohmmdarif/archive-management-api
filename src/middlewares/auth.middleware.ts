@@ -13,7 +13,7 @@ export const verifyToken = async (
   const authorization = req.headers?.authorization;
   if (!authorization) {
     return res.status(403).json({
-      message: "unauthorized",
+      message: "Unauthorized",
       data: null,
     });
   }
@@ -22,7 +22,7 @@ export const verifyToken = async (
 
   if (!(prefix === "Bearer" && token)) {
     return res.status(403).json({
-      message: "unauthorized",
+      message: "Unauthorized",
       data: null,
     });
   }
@@ -31,7 +31,7 @@ export const verifyToken = async (
 
   if (!user) {
     return res.status(403).json({
-      message: "unauthorized",
+      message: "Unauthorized",
       data: null,
     });
   }

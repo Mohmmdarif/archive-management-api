@@ -6,4 +6,5 @@ export const createDisposisiSchema = Yup.object().shape({
   id_penerima: Yup.string().required("Id penerima harus diisi"),
   pesan_disposisi: Yup.string().required("Pesan disposisi harus diisi"),
   id_status_disposisi: Yup.string().required("Id status disposisi harus diisi"),
+  parent_disposisi_id: Yup.string().nullable(),
 });

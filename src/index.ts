@@ -9,6 +9,7 @@ import {
   typesRoutes,
   criteriaRoutes,
   suratRoutes,
+  disposisiRoutes,
 } from "./routes/index";
 
 const app: Express = express();
@@ -32,6 +33,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/types", typesRoutes);
 app.use("/api/criterias", criteriaRoutes);
+app.use("/api/disposisi", disposisiRoutes);
 app.use("/api/surat", express.static("uploads"), suratRoutes);
 
 app.use(

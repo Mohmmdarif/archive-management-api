@@ -19,7 +19,7 @@ export const CriteriaService = {
     const criteria = await CriteriaRepository.FindById(criteriaId);
 
     if (!criteria) {
-      throw new CustomError(403, "Criteria not found");
+      throw new CustomError(404, "Criteria not found");
     }
 
     const updatedCriteria = await CriteriaRepository.Update(
@@ -34,7 +34,7 @@ export const CriteriaService = {
     const criteria = await CriteriaRepository.FindById(criteriaId);
 
     if (!criteria) {
-      throw new CustomError(403, "Criteria not found");
+      throw new CustomError(404, "Criteria not found");
     }
 
     await CriteriaRepository.Delete(criteriaId);

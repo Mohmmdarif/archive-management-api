@@ -165,6 +165,10 @@ model Disposisi {
   tanggal_disposisi   DateTime         @default(now())
   created_at          DateTime         @default(now())
   updated_at          DateTime         @default(now())
+
+  parent_disposisi_id String?
+  parent_disposisi    Disposisi?  @relation("ParentDisposisi", fields: [parent_disposisi_id], references: [id])
+  child_disposisi     Disposisi[] @relation("ParentDisposisi")
 }
 
 model Status_Disposisi {

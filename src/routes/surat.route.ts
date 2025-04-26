@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post(
   "/single",
-  verifyToken,
+  // verifyToken,
   uploadMiddleware.single("file"),
   SuratController.SingleUpload
 );

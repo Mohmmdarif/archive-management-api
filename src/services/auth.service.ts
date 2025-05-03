@@ -53,6 +53,8 @@ export const AuthService = {
       id: user.id,
       email: user.email,
       role_id: user.role_id,
+      nama_lengkap: user.nama_lengkap,
+      jabatan: user.jabatan,
     };
 
     const token = generateToken(data);

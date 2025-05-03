@@ -3,6 +3,7 @@ import { seedJenisSurat } from "./seed.jenis_surat";
 import { seedKategoriSurat } from "./seed.kategori_surat";
 import { seedKriteriaSurat } from "./seed.kriteria_surat";
 import { seedRoles } from "./seed.roles";
+import { seedStatusDisposisi } from "./seed.status_disposisi";
 import { seedTypeSurat } from "./seed.type_surat";
 import { seedUser } from "./seed.user";
 
@@ -15,6 +16,7 @@ async function main() {
   await seedJenisSurat();
   await seedKriteriaSurat();
   await seedKategoriSurat();
+  await seedStatusDisposisi();
   console.log("Seeders successfully generated!");
 }
 

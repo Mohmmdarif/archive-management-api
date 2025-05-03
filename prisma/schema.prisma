@@ -42,7 +42,6 @@ model User {
   created_at       DateTime      @default(now())
   updated_at       DateTime      @default(now())
 
-  Surat              Surat[]
   Surat_Masuk        Surat_Masuk[]
   disposisi_pengaju  Disposisi[]   @relation("Disposisi_pengaju")
   disposisi_penerima Disposisi[]   @relation("Disposisi_penerima")
@@ -58,6 +57,7 @@ model Role {
 }
 
 // SURAT MANAGE
+
 model Type_Surat {
   id        Int    @id @default(autoincrement())
   nama_type String
@@ -107,9 +107,9 @@ model Surat {
   id_kriteria_surat Int
   kriteria_surat    Kriteria_Surat @relation(fields: [id_kriteria_surat], references: [id])
   pengirim_surat    String
-  id_penerima_surat String
-  penerima_surat    User           @relation(fields: [id_penerima_surat], references: [id])
+  penerima_surat    String
   status_surat      Boolean        @default(false)
+  pengarsip         String
   filename          String
   path_file         String
   created_at        DateTime       @default(now())
@@ -122,9 +122,8 @@ model Surat {
 
 model Surat_Keluar {
   id            String   @id @default(cuid())
-  id_surat      String
+  id_surat      String   @unique
   surat         Surat    @relation(fields: [id_surat], references: [id])
-  tujuan_surat  String
   tanggal_kirim DateTime
   created_at    DateTime @default(now())
   updated_at    DateTime @default(now())
@@ -132,14 +131,14 @@ model Surat_Keluar {
 
 model Surat_Masuk {
   id                      String           @id @default(cuid())
-  id_surat                String
+  id_surat                String           @unique
   surat                   Surat            @relation(fields: [id_surat], references: [id])
   no_agenda               Int
   id_kategori_surat       Int
   kategori_surat          Kategori_Surat   @relation(fields: [id_kategori_surat], references: [id])
   jumlah_lampiran         Int
-  id_user_disposisi       String
-  user_disposisi          User             @relation(fields: [id_user_disposisi], references: [id])
+  id_user_disposisi       String?
+  user_disposisi          User?            @relation(fields: [id_user_disposisi], references: [id])
   tanggal_terima          DateTime
   id_status_disposisi     Int
   status_disposisi        Status_Disposisi @relation(fields: [id_status_disposisi], references: [id])

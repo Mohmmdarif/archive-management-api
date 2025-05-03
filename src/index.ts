@@ -10,7 +10,10 @@ import {
   criteriaRoutes,
   suratRoutes,
   disposisiRoutes,
+  classifierRoutes,
+  dashboardRoutes,
 } from "./routes/index";
+import path from "path";
 
 const app: Express = express();
 
@@ -22,6 +25,7 @@ app.use(
     credentials: true, // Required to allow cookies with the requests
   })
 );
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // Routes
 app.get("/", (req: Request, res: Response) => {
@@ -32,9 +36,11 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/types", typesRoutes);
+app.use("/api/classifier", classifierRoutes);
 app.use("/api/criterias", criteriaRoutes);
 app.use("/api/disposisi", disposisiRoutes);
-app.use("/api/surat", express.static("uploads"), suratRoutes);
+app.use("/api/surat", suratRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 app.use(
   (err: Error, req: Request, res: Response, next: express.NextFunction) => {

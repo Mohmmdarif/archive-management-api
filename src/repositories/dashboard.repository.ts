@@ -11,19 +11,43 @@ export const DashboardRepository = {
     return suratKeluarCount;
   },
 
-  GetDisposisiCount: async () => {
-    const disposisiCount = await prisma.surat.count({
-      where: {
-        Surat_Masuk: {
-          some: {
-            status_disposisi: {
-              id: 6,
+  GetDisposisiCount: async (idUser: string) => {
+    const allSurat = await prisma.surat_Masuk.findMany({
+      include: {
+        disposisi: {
+          orderBy: { tanggal_disposisi: "desc" }, // urutkan disposisi dari yang terbaru
+          include: {
+            pengaju: {
+              select: {
+                id: true,
+                nama_lengkap: true,
+                role_id: true,
+                jabatan: true,
+                created_at: true,
+              },
             },
+            penerima: {
+              select: {
+                id: true,
+                nama_lengkap: true,
+                role_id: true,
+                jabatan: true,
+                created_at: true,
+              },
+            },
+            status_disposisi: true,
           },
         },
       },
+      orderBy: { tanggal_ajuan_disposisi: "desc" },
     });
-    return disposisiCount;
+
+    const filteredSurat = allSurat.filter((surat) => {
+      const lastDisposisi = surat.disposisi[0];
+      return lastDisposisi?.penerima?.id === idUser;
+    });
+
+    return filteredSurat.length;
   },
 
   GetSuratToday: async () => {

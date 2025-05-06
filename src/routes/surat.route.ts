@@ -22,7 +22,7 @@ router.get(
 router.post(
   "/single",
   // verifyToken,
-  uploadMiddleware.single("file"),
+  uploadMiddleware.single,
   SuratController.SingleUpload
 );
 

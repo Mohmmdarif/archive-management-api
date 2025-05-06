@@ -45,7 +45,8 @@ export const DashboardController = {
     _next: NextFunction
   ) => {
     try {
-      const disposisiCount = await DashboardService.GetDisposisiCount();
+      const idUser = req.params.id;
+      const disposisiCount = await DashboardService.GetDisposisiCount(idUser);
 
       res.status(200).json({
         success: true,

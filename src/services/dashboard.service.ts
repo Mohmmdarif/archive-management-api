@@ -20,9 +20,11 @@ export const DashboardService = {
     }
   },
 
-  GetDisposisiCount: async () => {
+  GetDisposisiCount: async (idUser: string) => {
     try {
-      const disposisiCount = await DashboardRepository.GetDisposisiCount();
+      const disposisiCount = await DashboardRepository.GetDisposisiCount(
+        idUser
+      );
       return disposisiCount;
     } catch (error) {
       throw new CustomError(500, "Internal Server Error");

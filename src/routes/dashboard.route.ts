@@ -9,7 +9,7 @@ router.get("/suratmasuk/count", DashboardController.GetSuratMasukCount);
 
 router.get("/suratkeluar/count", DashboardController.GetSuratKeluarCount);
 
-router.get("/suratdisposisi/count", DashboardController.GetDisposisiCount);
+router.get("/suratdisposisi/count/:id", DashboardController.GetDisposisiCount);
 
 router.get("/surat/today", DashboardController.GetSuratToday);
 

@@ -12,9 +12,9 @@ export const DisposisiService = {
       pengaju: {
         connect: { id: payload.id_pengaju },
       },
-      penerima: {
-        connect: { id: payload.id_penerima },
-      },
+      penerima: payload.id_penerima
+        ? { connect: { id: payload.id_penerima } }
+        : undefined,
       status_disposisi: {
         connect: { id: payload.id_status_disposisi },
       },
@@ -43,8 +43,20 @@ export const DisposisiService = {
     return disposisi;
   },
 
-  DisposisiBySuratMasuk: async (idSuratMasuk: string) => {
+  DisposisiSuratMasuk: async (idSuratMasuk: string) => {
     const disposisi = await DisposisiRepository.FindBySuratMasuk(idSuratMasuk);
+
+    return disposisi;
+  },
+
+  DisposisiByUserPenerima: async (idUser: string) => {
+    const disposisi = await DisposisiRepository.FindByUserPenerima(idUser);
+
+    return disposisi;
+  },
+
+  DisposisiStatus: async () => {
+    const disposisi = await DisposisiRepository.FindAllStatusDisposisi();
 
     return disposisi;
   },

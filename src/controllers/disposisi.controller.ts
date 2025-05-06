@@ -8,10 +8,10 @@ import { DisposisiService } from "../services/disposisi.service";
 export const DisposisiController = {
   CreateDisposisi: async (req: Request, res: Response, _next: NextFunction) => {
     try {
-      await createDisposisiSchema.validate(req.body as IDisposisiPayload, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
+      // await createDisposisiSchema.validate(req.body as IDisposisiPayload, {
+      //   abortEarly: false,
+      //   stripUnknown: true,
+      // });
 
       const disposisi = await DisposisiService.CreateDisposisi(
         req.body as IDisposisiPayload
@@ -51,8 +51,8 @@ export const DisposisiController = {
     _next: NextFunction
   ) => {
     try {
-      const suratMasukId = req.params.suratMasukId;
-      const disposisi = await DisposisiService.DisposisiBySuratMasuk(
+      const suratMasukId = req.params.idSuratMasuk;
+      const disposisi = await DisposisiService.DisposisiSuratMasuk(
         suratMasukId
       );
 
@@ -60,6 +60,39 @@ export const DisposisiController = {
         success: true,
         message: "Disposisi successfully retrieved",
         data: disposisi,
+      });
+    } catch (error) {
+      _next(error);
+    }
+  },
+
+  DisposisiByUserPenerima: async (
+    req: Request,
+    res: Response,
+    _next: NextFunction
+  ) => {
+    try {
+      const idUser = req.params.idUser;
+      const disposisi = await DisposisiService.DisposisiByUserPenerima(idUser);
+
+      res.status(200).json({
+        success: true,
+        message: "Disposisi successfully retrieved",
+        data: disposisi,
+      });
+    } catch (error) {
+      _next(error);
+    }
+  },
+
+  DisposisiStatus: async (req: Request, res: Response, _next: NextFunction) => {
+    try {
+      const disposisiStatus = await DisposisiService.DisposisiStatus();
+
+      res.status(200).json({
+        success: true,
+        message: "Disposisi status successfully retrieved",
+        data: disposisiStatus,
       });
     } catch (error) {
       _next(error);

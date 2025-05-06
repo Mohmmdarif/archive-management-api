@@ -3,10 +3,9 @@ import { SuratService } from "../services/surat.service";
 import { CustomError } from "../utils/customError";
 import { createSuratSchema } from "../utils/validations/surat.validation";
 import { ISurat } from "../interfaces/surat.interface";
-import { IRequestWithUser } from "../middlewares/auth.middleware";
 import * as yup from "yup";
 import { deleteFile } from "../utils/fileHelp";
-import { UserRole } from "../middlewares/rbac.middleware";
+import { toDataURI } from "../utils/encode";
 
 export const SuratController = {
   GetAllSurat: async (req: Request, res: Response, _next: NextFunction) => {
@@ -38,33 +37,36 @@ export const SuratController = {
   },
 
   SingleUpload: async (req: Request, res: Response, _next: NextFunction) => {
-    let filePath: string | null = null;
+    // let filePath: string | null = null;
     try {
       if (!req.file) {
         throw new CustomError(400, "No File Uploaded!");
       }
 
-      filePath = req.file.path;
+      // Konversi file ke Data URI
+      const fileBuffer = req.file.buffer;
+      const fileName = req.file.originalname;
 
-      const surat = await SuratService.SingleUpload(filePath);
-
-      const publicFilePath = `${req.protocol}://${req.get(
-        "host"
-      )}/${filePath.replace(/\\/g, "/")}`;
+      // Proses upload ke Cloudinary dan validasi ke model ML
+      const { cloudinaryUrl, publicId, data } = await SuratService.SingleUpload(
+        fileBuffer,
+        fileName
+      );
 
       res.status(200).json({
         success: true,
-        message: "File uploaded successfully",
+        message: "File uploaded and validated successfully",
         data: {
-          ...surat,
-          filePath: publicFilePath,
+          cloudinaryUrl, // URL file di Cloudinary
+          publicId, // Public ID file di Cloudinary
+          data, // Hasil prediksi dari model ML
         },
       });
     } catch (error) {
       // Hapus file jika gagal
-      if (filePath) {
-        await deleteFile(filePath);
-      }
+      // if (filePath) {
+      //   await deleteFile(filePath);
+      // }
 
       if (error instanceof yup.ValidationError) {
         const errors = error.errors.join(", ");
@@ -95,9 +97,9 @@ export const SuratController = {
       });
     } catch (error) {
       // Hapus file jika gagal
-      if (req.file) {
-        await deleteFile(req.file.path);
-      }
+      // if (req.file) {
+      //   await deleteFile(req.file.path);
+      // }
 
       if (error instanceof yup.ValidationError) {
         const errors = error.errors.join(", ");

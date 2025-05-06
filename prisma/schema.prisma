@@ -156,8 +156,8 @@ model Disposisi {
   surat_masuk         Surat_Masuk      @relation(fields: [id_surat_masuk], references: [id])
   id_pengaju          String
   pengaju             User             @relation(name: "Disposisi_pengaju", fields: [id_pengaju], references: [id])
-  id_penerima         String
-  penerima            User             @relation(name: "Disposisi_penerima", fields: [id_penerima], references: [id])
+  id_penerima         String?
+  penerima            User?            @relation(name: "Disposisi_penerima", fields: [id_penerima], references: [id])
   pesan_disposisi     String
   id_status_disposisi Int
   status_disposisi    Status_Disposisi @relation(fields: [id_status_disposisi], references: [id])

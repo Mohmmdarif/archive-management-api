@@ -7,6 +7,7 @@ import { BASE_URL_MODEL_API } from "../utils/env";
 import { SuratRepository } from "../repositories/surat.repository";
 import { ISurat } from "../interfaces/surat.interface";
 import prisma from "../db";
+import { handleUpload } from "../utils/cloudinary";
 
 export const SuratService = {
   FindAll: async () => {
@@ -31,18 +32,30 @@ export const SuratService = {
       throw new CustomError(500, "Internal Server Error");
     }
   },
-  SingleUpload: async (filePath: string) => {
+  SingleUpload: async (fileBuffer: Buffer, fileName: string) => {
     try {
-      const formData = new FormData();
-      const fileStream = fs.createReadStream(filePath);
+      // Upload file ke Cloudinary
+      const uploadResult: any = await handleUpload(fileBuffer, fileName);
 
-      formData.append("file", fileStream, path.basename(filePath));
+      console.log("Cloudinary upload result:", uploadResult);
+      const formData = new FormData();
+      // const fileStream = fs.createReadStream(filePath);
+
+      // formData.append("file", fileStream, path.basename(filePath));
 
       const response = await fetch(`${BASE_URL_MODEL_API}/file`, {
         method: "POST",
-        headers: formData.getHeaders(),
-        body: formData as any,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ file_url: uploadResult.secure_url }),
       });
+
+      // const response = await fetch(`${BASE_URL_MODEL_API}/file`, {
+      //   method: "POST",
+      //   headers: formData.getHeaders(),
+      //   body: formData as any,
+      // });
 
       if (response.status !== 200) {
         throw new CustomError(500, "Failed to upload file to the model API!");
@@ -52,7 +65,11 @@ export const SuratService = {
 
       console.log("Response from model API:", data);
 
-      return data;
+      return {
+        cloudinaryUrl: uploadResult.secure_url,
+        publicId: uploadResult.public_id,
+        data,
+      };
     } catch (error) {
       throw new CustomError(500, "Internal Server Error");
     }

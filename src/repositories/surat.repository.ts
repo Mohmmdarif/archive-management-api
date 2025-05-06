@@ -158,14 +158,36 @@ export const SuratRepository = {
 
   Delete: async (id: string) => {
     const transaction = await prisma.$transaction(async (prisma) => {
-      await prisma.surat_Masuk.deleteMany({
+      // Cek apakah ada Surat_Masuk yang terkait dengan Surat ID
+      const suratMasuk = await prisma.surat_Masuk.findFirst({
         where: { id_surat: id },
       });
 
-      await prisma.surat_Keluar.deleteMany({
+      // Jika ada, hapus semua disposisi terkait surat masuk
+      if (suratMasuk) {
+        await prisma.disposisi.deleteMany({
+          where: { id_surat_masuk: suratMasuk.id },
+        });
+
+        // Hapus Surat_Masuk yang terkait
+        await prisma.surat_Masuk.delete({
+          where: { id: suratMasuk.id },
+        });
+      }
+
+      // Cek apakah ada Surat_Keluar yang terkait dengan Surat ID
+      const suratKeluar = await prisma.surat_Keluar.findFirst({
         where: { id_surat: id },
       });
 
+      // Jika ada, hapus Surat_Keluar yang terkait
+      if (suratKeluar) {
+        await prisma.surat_Keluar.delete({
+          where: { id: suratKeluar.id },
+        });
+      }
+
+      // Terakhir, hapus Surat utama
       const deletedSurat = await prisma.surat.delete({
         where: { id },
       });

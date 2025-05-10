@@ -5,27 +5,23 @@ import { CriteriaController } from "../controllers/criteria.controller";
 
 const router = express.Router();
 
-router.get(
-  "/",
-  // verifyToken,
-  CriteriaController.GetCriteria
-);
+router.get("/", verifyToken, CriteriaController.GetCriteria);
 router.post(
   "/create",
-  // verifyToken,
-  // rbacMiddleware([UserRole.KoordinatorTU]),
+  verifyToken,
+  rbacMiddleware([UserRole.KoordinatorTU]),
   CriteriaController.CreateCriteria
 );
 router.put(
   "/:id",
-  // verifyToken,
-  // rbacMiddleware([UserRole.KoordinatorTU]),
+  verifyToken,
+  rbacMiddleware([UserRole.KoordinatorTU]),
   CriteriaController.UpdateCriteria
 );
 router.delete(
   "/:id",
-  // verifyToken,
-  // rbacMiddleware([UserRole.KoordinatorTU]),
+  verifyToken,
+  rbacMiddleware([UserRole.KoordinatorTU]),
   CriteriaController.DeleteCriteria
 );
 

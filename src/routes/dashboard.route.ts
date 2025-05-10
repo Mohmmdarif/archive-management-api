@@ -5,12 +5,30 @@ import { DashboardController } from "../controllers/dashboard.controller";
 
 const router = express.Router();
 
-router.get("/suratmasuk/count", DashboardController.GetSuratMasukCount);
+router.get(
+  "/suratmasuk/count",
+  verifyToken,
+  DashboardController.GetSuratMasukCount
+);
 
-router.get("/suratkeluar/count", DashboardController.GetSuratKeluarCount);
+router.get(
+  "/suratkeluar/count",
+  verifyToken,
+  DashboardController.GetSuratKeluarCount
+);
 
-router.get("/suratdisposisi/count/:id", DashboardController.GetDisposisiCount);
+router.get(
+  "/suratdisposisi/count/:id",
+  verifyToken,
+  rbacMiddleware([
+    UserRole.KoordinatorTU,
+    UserRole.Pimpinan,
+    UserRole.ArsiparisSM,
+    UserRole.UserGeneral,
+  ]),
+  DashboardController.GetDisposisiCount
+);
 
-router.get("/surat/today", DashboardController.GetSuratToday);
+router.get("/surat/today", verifyToken, DashboardController.GetSuratToday);
 
 export default router;

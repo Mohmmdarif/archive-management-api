@@ -7,6 +7,7 @@ export enum UserRole {
   Pimpinan = 2,
   ArsiparisSM = 3,
   ArsiparisSK = 4,
+  UserGeneral = 5,
 }
 
 export default (allowedRoles: UserRole[]) => {

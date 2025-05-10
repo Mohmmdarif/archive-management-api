@@ -6,23 +6,20 @@ import uploadMiddleware from "../middlewares/upload.middleware";
 
 const router = express.Router();
 
-router.get("/letters", SuratController.GetAllSurat);
+router.get("/letters", verifyToken, SuratController.GetAllSurat);
 
-router.get(
-  "/letters/:id",
-  // verifyToken,
-  // rbacMiddleware([
-  //   UserRole.KoordinatorTU,
-  //   UserRole.ArsiparisSM,
-  //   UserRole.ArsiparisSK,
-  // ]),
-  SuratController.GetSuratById
-);
+router.get("/letters/:id", verifyToken, SuratController.GetSuratById);
 
 router.post(
   "/single",
-  // verifyToken,
+  verifyToken,
   uploadMiddleware.single,
+  rbacMiddleware([
+    UserRole.KoordinatorTU,
+    UserRole.Pimpinan,
+    UserRole.ArsiparisSM,
+    UserRole.ArsiparisSK,
+  ]),
   SuratController.SingleUpload
 );
 

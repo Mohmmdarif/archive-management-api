@@ -5,27 +5,23 @@ import { TypesController } from "../controllers/types.controller";
 
 const router = express.Router();
 
-router.get(
-  "/",
-  // verifyToken,
-  TypesController.GetTypes
-);
+router.get("/", verifyToken, TypesController.GetTypes);
 router.post(
   "/create",
-  // verifyToken,
-  // rbacMiddleware([UserRole.KoordinatorTU]),
+  verifyToken,
+  rbacMiddleware([UserRole.KoordinatorTU]),
   TypesController.CreateTypes
 );
 router.put(
   "/:id",
-  // verifyToken,
-  // rbacMiddleware([UserRole.KoordinatorTU]),
+  verifyToken,
+  rbacMiddleware([UserRole.KoordinatorTU]),
   TypesController.UpdateTypes
 );
 router.delete(
   "/:id",
-  // verifyToken,
-  // rbacMiddleware([UserRole.KoordinatorTU]),
+  verifyToken,
+  rbacMiddleware([UserRole.KoordinatorTU]),
   TypesController.DeleteTypes
 );
 

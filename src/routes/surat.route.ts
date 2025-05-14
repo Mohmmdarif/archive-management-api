@@ -16,14 +16,22 @@ router.post(
   uploadMiddleware.single,
   rbacMiddleware([
     UserRole.KoordinatorTU,
-    UserRole.Pimpinan,
     UserRole.ArsiparisSM,
     UserRole.ArsiparisSK,
   ]),
   SuratController.SingleUpload
 );
 
-router.post("/save", SuratController.SaveConfirmedSurat);
+router.post(
+  "/save",
+  verifyToken,
+  rbacMiddleware([
+    UserRole.KoordinatorTU,
+    UserRole.ArsiparisSM,
+    UserRole.ArsiparisSK,
+  ]),
+  SuratController.SaveConfirmedSurat
+);
 
 router.put(
   "/:id",

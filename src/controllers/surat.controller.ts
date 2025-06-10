@@ -4,8 +4,6 @@ import { CustomError } from "../utils/customError";
 import { createSuratSchema } from "../utils/validations/surat.validation";
 import { ISurat } from "../interfaces/surat.interface";
 import * as yup from "yup";
-import { deleteFile } from "../utils/fileHelp";
-import { toDataURI } from "../utils/encode";
 
 export const SuratController = {
   GetAllSurat: async (req: Request, res: Response, _next: NextFunction) => {
@@ -37,7 +35,6 @@ export const SuratController = {
   },
 
   SingleUpload: async (req: Request, res: Response, _next: NextFunction) => {
-    // let filePath: string | null = null;
     try {
       if (!req.file) {
         throw new CustomError(400, "No File Uploaded!");
@@ -63,11 +60,6 @@ export const SuratController = {
         },
       });
     } catch (error) {
-      // Hapus file jika gagal
-      // if (filePath) {
-      //   await deleteFile(filePath);
-      // }
-
       if (error instanceof yup.ValidationError) {
         const errors = error.errors.join(", ");
         return _next(new CustomError(400, errors));
@@ -96,11 +88,6 @@ export const SuratController = {
         data: savedSurat,
       });
     } catch (error) {
-      // Hapus file jika gagal
-      // if (req.file) {
-      //   await deleteFile(req.file.path);
-      // }
-
       if (error instanceof yup.ValidationError) {
         const errors = error.errors.join(", ");
         return _next(new CustomError(400, errors));
@@ -144,6 +131,27 @@ export const SuratController = {
         success: true,
         message: "Surat deleted successfully",
         data: surat,
+      });
+    } catch (error) {
+      _next(error);
+    }
+  },
+
+  DeleteCloudinaryFile: async (
+    req: Request,
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
+    console.log("Deleting file from Cloudinary...");
+    const { publicId } = req.body.data;
+    console.log("Public ID to delete:", publicId);
+
+    try {
+      await SuratService.DeleteCloudinaryFile(publicId);
+
+      res.status(200).json({
+        success: true,
+        message: "File deleted successfully from Cloudinary",
       });
     } catch (error) {
       _next(error);

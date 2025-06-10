@@ -1,13 +1,9 @@
-import fs from "fs";
-import path from "path";
 import fetch from "node-fetch";
-import FormData from "form-data";
 import { CustomError } from "../utils/customError";
 import { BASE_URL_MODEL_API } from "../utils/env";
 import { SuratRepository } from "../repositories/surat.repository";
 import { ISurat } from "../interfaces/surat.interface";
-import prisma from "../db";
-import { handleUpload } from "../utils/cloudinary";
+import cloudinary, { handleUpload } from "../utils/cloudinary";
 
 export const SuratService = {
   FindAll: async () => {
@@ -38,11 +34,6 @@ export const SuratService = {
       const uploadResult: any = await handleUpload(fileBuffer, fileName);
 
       console.log("Cloudinary upload result:", uploadResult);
-      const formData = new FormData();
-      // const fileStream = fs.createReadStream(filePath);
-
-      // formData.append("file", fileStream, path.basename(filePath));
-
       const response = await fetch(`${BASE_URL_MODEL_API}/file`, {
         method: "POST",
         headers: {
@@ -51,13 +42,8 @@ export const SuratService = {
         body: JSON.stringify({ file_url: uploadResult.secure_url }),
       });
 
-      // const response = await fetch(`${BASE_URL_MODEL_API}/file`, {
-      //   method: "POST",
-      //   headers: formData.getHeaders(),
-      //   body: formData as any,
-      // });
-
       if (response.status !== 200) {
+        await cloudinary.uploader.destroy(uploadResult.public_id);
         throw new CustomError(500, "Failed to upload file to the model API!");
       }
 
@@ -113,6 +99,20 @@ export const SuratService = {
       return;
     } catch (error) {
       console.log("Error deleting surat:", error);
+      throw new CustomError(500, "Internal Server Error");
+    }
+  },
+
+  DeleteCloudinaryFile: async (publicId: string) => {
+    try {
+      const result = await cloudinary.uploader.destroy(publicId, {
+        resource_type: "raw",
+      });
+      if (result.result !== "ok") {
+        throw new CustomError(500, "Failed to delete file from Cloudinary");
+      }
+      return { success: true, message: "File deleted successfully" };
+    } catch (error) {
       throw new CustomError(500, "Internal Server Error");
     }
   },

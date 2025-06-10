@@ -44,6 +44,8 @@ router.put(
   SuratController.UpdateSurat
 );
 
+router.post("/delete-cloudinary-file", SuratController.DeleteCloudinaryFile);
+
 router.delete(
   "/:id",
   verifyToken,
@@ -54,4 +56,5 @@ router.delete(
   ]),
   SuratController.DeleteSurat
 );
+
 export default router;

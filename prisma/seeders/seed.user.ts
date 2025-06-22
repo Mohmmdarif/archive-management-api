@@ -11,6 +11,7 @@ export async function seedUser() {
       nip: "05938045322",
       password: hashedPassword,
       id_jenis_kelamin: 2,
+      jabatan: "koordinator_tu",
       role_id: 1,
     },
     {
@@ -19,6 +20,7 @@ export async function seedUser() {
       nip: "059387736488",
       password: hashedPassword,
       id_jenis_kelamin: 2,
+      jabatan: "dekan",
       role_id: 2,
     },
     {
@@ -27,6 +29,7 @@ export async function seedUser() {
       nip: "059388834223",
       password: hashedPassword,
       id_jenis_kelamin: 1,
+      jabatan: "arsiparis_surat_masuk",
       role_id: 3,
     },
     {
@@ -35,7 +38,17 @@ export async function seedUser() {
       nip: "059388843563",
       password: hashedPassword,
       id_jenis_kelamin: 1,
+      jabatan: "arsiparis_surat_keluar",
       role_id: 4,
+    },
+    {
+      nama_lengkap: "John Doe",
+      email: "john@gmail.com",
+      nip: "09123893984",
+      password: hashedPassword,
+      id_jenis_kelamin: 1,
+      jabatan: "staff",
+      role_id: 5,
     },
   ];
 

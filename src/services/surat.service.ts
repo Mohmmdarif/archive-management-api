@@ -28,6 +28,16 @@ export const SuratService = {
       throw new CustomError(500, "Internal Server Error");
     }
   },
+
+  GetDeleteHistoryByUser: async (id_user: string) => {
+    try {
+      const surat = await SuratRepository.FindDeleteHistoryByUser(id_user);
+      return surat;
+    } catch (error) {
+      throw new CustomError(500, "Internal Server Error");
+    }
+  },
+
   SingleUpload: async (fileBuffer: Buffer, fileName: string) => {
     try {
       // Upload file ke Cloudinary
@@ -79,6 +89,63 @@ export const SuratService = {
       }
 
       const updatedSurat = await SuratRepository.Update(id, payload);
+
+      return updatedSurat;
+    } catch (error) {
+      throw new CustomError(500, "Internal Server Error");
+    }
+  },
+
+  RequestDeleteSurat: async (
+    id: string,
+    alasan_penghapusan_surat: string,
+    id_user_pengaju_surat: string
+  ) => {
+    try {
+      console.log("Requesting delete surat with ID:", id);
+      const surat = await SuratRepository.FindById(id);
+
+      if (!surat) {
+        throw new CustomError(404, "Surat not found");
+      }
+
+      const updatedSurat = await SuratRepository.RequestDelete(
+        id,
+        alasan_penghapusan_surat,
+        id_user_pengaju_surat
+      );
+
+      return updatedSurat;
+    } catch (error) {
+      throw new CustomError(500, "Internal Server Error");
+    }
+  },
+
+  ApproveDeleteSurat: async (id: string) => {
+    try {
+      const surat = await SuratRepository.FindById(id);
+
+      if (!surat) {
+        throw new CustomError(404, "Surat not found");
+      }
+
+      const updatedSurat = await SuratRepository.ApproveDelete(id);
+
+      return updatedSurat;
+    } catch (error) {
+      throw new CustomError(500, "Internal Server Error");
+    }
+  },
+
+  RejectDeleteSurat: async (id: string) => {
+    try {
+      const surat = await SuratRepository.FindById(id);
+
+      if (!surat) {
+        throw new CustomError(404, "Surat not found");
+      }
+
+      const updatedSurat = await SuratRepository.RejectDelete(id);
 
       return updatedSurat;
     } catch (error) {

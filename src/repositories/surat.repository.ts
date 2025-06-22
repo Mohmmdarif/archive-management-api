@@ -81,6 +81,7 @@ export const SuratRepository = {
 
   FindAll: async () => {
     const surat = await prisma.surat.findMany({
+      where: { is_deleted: false },
       include: {
         Surat_Masuk: {
           select: {
@@ -107,6 +108,30 @@ export const SuratRepository = {
       },
     });
     return surat;
+  },
+
+  FindDeleteHistoryByUser: async (id_user: string) => {
+    const logsDeletion = await prisma.activityLogDeletion.findMany({
+      where: { id_user },
+      include: {
+        surat: {
+          select: {
+            id: true,
+            no_surat: true,
+            perihal_surat: true,
+            id_kriteria_surat: true,
+            tanggal_surat: true,
+            status_penghapusan_surat: true,
+            is_deleted: true,
+          },
+        },
+      },
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+
+    return logsDeletion;
   },
 
   Update: async (id: string, payload: ISurat) => {
@@ -154,6 +179,68 @@ export const SuratRepository = {
       return surat;
     });
     return transaction;
+  },
+
+  RequestDelete: async (
+    id: string,
+    alasan_penghapusan: string,
+    id_user_pengaju: string
+  ) => {
+    const surat = await prisma.surat.update({
+      where: { id },
+      data: {
+        alasan_penghapusan_surat: alasan_penghapusan,
+        id_user_pengaju_penghapusan: id_user_pengaju,
+        status_penghapusan_surat: "REQUESTED",
+      },
+    });
+
+    await prisma.activityLogDeletion.create({
+      data: {
+        id_surat: id,
+        id_user: id_user_pengaju,
+        status: "REQUESTED",
+        alasan: alasan_penghapusan,
+      },
+    });
+    return surat;
+  },
+
+  ApproveDelete: async (id: string) => {
+    const surat = await prisma.surat.update({
+      where: { id },
+      data: {
+        status_penghapusan_surat: "APPROVED",
+        is_deleted: true,
+      },
+    });
+
+    await prisma.activityLogDeletion.updateMany({
+      where: { id_surat: id, status: "REQUESTED" },
+      data: {
+        status: "APPROVED",
+      },
+    });
+
+    return surat;
+  },
+
+  RejectDelete: async (id: string) => {
+    const surat = await prisma.surat.update({
+      where: { id },
+      data: {
+        status_penghapusan_surat: "REJECTED",
+      },
+    });
+
+    await prisma.activityLogDeletion.updateMany({
+      where: { id_surat: id, status: "REQUESTED" },
+      data: {
+        status: "REJECTED",
+      },
+    });
+
+    return surat;
   },
 
   Delete: async (id: string) => {

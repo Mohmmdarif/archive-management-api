@@ -10,6 +10,12 @@ router.get("/letters", verifyToken, SuratController.GetAllSurat);
 
 router.get("/letters/:id", verifyToken, SuratController.GetSuratById);
 
+router.get(
+  "/delete-history/:id_user",
+  verifyToken,
+  SuratController.GetDeleteHistoryByUser
+);
+
 router.post(
   "/single",
   verifyToken,
@@ -42,6 +48,39 @@ router.put(
     UserRole.ArsiparisSK,
   ]),
   SuratController.UpdateSurat
+);
+
+router.put(
+  "/:id/request-delete",
+  verifyToken,
+  rbacMiddleware([
+    UserRole.KoordinatorTU,
+    UserRole.ArsiparisSM,
+    UserRole.ArsiparisSK,
+  ]),
+  SuratController.RequestDeleteSurat
+);
+
+router.put(
+  "/:id/approve-delete",
+  verifyToken,
+  rbacMiddleware([
+    UserRole.KoordinatorTU,
+    UserRole.ArsiparisSM,
+    UserRole.ArsiparisSK,
+  ]),
+  SuratController.ApproveDeleteSurat
+);
+
+router.put(
+  "/:id/reject-delete",
+  verifyToken,
+  rbacMiddleware([
+    UserRole.KoordinatorTU,
+    UserRole.ArsiparisSM,
+    UserRole.ArsiparisSK,
+  ]),
+  SuratController.RejectDeleteSurat
 );
 
 router.post("/delete-cloudinary-file", SuratController.DeleteCloudinaryFile);

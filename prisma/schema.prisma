@@ -45,6 +45,10 @@ model User {
   Surat_Masuk        Surat_Masuk[]
   disposisi_pengaju  Disposisi[]   @relation("Disposisi_pengaju")
   disposisi_penerima Disposisi[]   @relation("Disposisi_penerima")
+
+  Surat Surat[]
+
+  ActivityLog ActivityLogDeletion[]
 }
 
 model Role {
@@ -115,9 +119,16 @@ model Surat {
   created_at        DateTime       @default(now())
   updated_at        DateTime       @default(now())
 
-  surat_keluar Surat_Keluar[]
+  status_penghapusan_surat    StatusPenghapusan @default(NONE)
+  alasan_penghapusan_surat    String?
+  id_user_pengaju_penghapusan String?
+  user_pengaju_penghapusan    User?             @relation(fields: [id_user_pengaju_penghapusan], references: [id])
 
-  Surat_Masuk Surat_Masuk[]
+  surat_keluar Surat_Keluar[]
+  Surat_Masuk  Surat_Masuk[]
+
+  ActivityLogDeletion ActivityLogDeletion[]
+  is_deleted          Boolean               @default(false)
 }
 
 model Surat_Keluar {
@@ -148,6 +159,24 @@ model Surat_Masuk {
   updated_at              DateTime         @default(now())
 
   disposisi Disposisi[]
+}
+
+enum StatusPenghapusan {
+  NONE
+  REQUESTED
+  APPROVED
+  REJECTED
+}
+
+model ActivityLogDeletion {
+  id         String   @id @default(cuid())
+  id_surat   String
+  surat      Surat    @relation(fields: [id_surat], references: [id])
+  id_user    String
+  user       User     @relation(fields: [id_user], references: [id])
+  status     String // "REQUESTED", "APPROVED", "REJECTED"
+  alasan     String?
+  created_at DateTime @default(now())
 }
 
 model Disposisi {

@@ -2,12 +2,24 @@ import prisma from "../db";
 
 export const DashboardRepository = {
   GetSuratMasukCount: async () => {
-    const suratMasukCount = await prisma.surat_Masuk.count();
+    const suratMasukCount = await prisma.surat_Masuk.count({
+      where: {
+        surat: {
+          is_deleted: false,
+        },
+      },
+    });
     return suratMasukCount;
   },
 
   GetSuratKeluarCount: async () => {
-    const suratKeluarCount = await prisma.surat_Keluar.count();
+    const suratKeluarCount = await prisma.surat_Keluar.count({
+      where: {
+        surat: {
+          is_deleted: false,
+        },
+      },
+    });
     return suratKeluarCount;
   },
 
@@ -53,6 +65,7 @@ export const DashboardRepository = {
   GetSuratToday: async () => {
     const suratToday = await prisma.surat.findMany({
       where: {
+        is_deleted: false,
         created_at: {
           gte: new Date(new Date().setHours(0, 0, 0, 0)),
           lte: new Date(new Date().setHours(23, 59, 59, 999)),

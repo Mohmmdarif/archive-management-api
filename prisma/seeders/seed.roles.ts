@@ -6,6 +6,7 @@ export async function seedRoles() {
     { nama_role: "Pimpinan" },
     { nama_role: "Arsiparis Surat Masuk" },
     { nama_role: "Arsiparis Surat Keluar" },
+    { nama_role: "User General" },
   ];
 
   await prisma.role.createMany({

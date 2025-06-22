@@ -4,6 +4,7 @@ import { CustomError } from "../utils/customError";
 import { createSuratSchema } from "../utils/validations/surat.validation";
 import { ISurat } from "../interfaces/surat.interface";
 import * as yup from "yup";
+import prisma from "../db";
 
 export const SuratController = {
   GetAllSurat: async (req: Request, res: Response, _next: NextFunction) => {
@@ -27,6 +28,26 @@ export const SuratController = {
       res.status(200).json({
         success: true,
         message: "Get surat by ID successfully",
+        data: surat,
+      });
+    } catch (error) {
+      _next(error);
+    }
+  },
+
+  GetDeleteHistoryByUser: async (
+    req: Request,
+    res: Response,
+    _next: NextFunction
+  ) => {
+    const { id_user } = req.params;
+
+    try {
+      const surat = await SuratService.GetDeleteHistoryByUser(id_user);
+
+      res.status(200).json({
+        success: true,
+        message: "Get delete history by user successfully",
         data: surat,
       });
     } catch (error) {
@@ -111,6 +132,71 @@ export const SuratController = {
         success: true,
         message: "Surat updated successfully",
         data: updated,
+      });
+    } catch (error) {
+      _next(error);
+    }
+  },
+
+  RequestDeleteSurat: async (
+    req: Request,
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
+    const { id } = req.params;
+    const { alasan_penghapusan_surat, id_user_pengaju_penghapusan } = req.body;
+
+    try {
+      const surat = await SuratService.RequestDeleteSurat(
+        id,
+        alasan_penghapusan_surat,
+        id_user_pengaju_penghapusan
+      );
+
+      res.status(200).json({
+        success: true,
+        message: "Request to delete surat sent successfully",
+        data: surat,
+      });
+    } catch (error) {
+      _next(error);
+    }
+  },
+
+  ApproveDeleteSurat: async (
+    req: Request,
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
+    const { id } = req.params;
+
+    try {
+      const surat = await SuratService.ApproveDeleteSurat(id);
+
+      res.status(200).json({
+        success: true,
+        message: "Request to delete surat approved successfully",
+        data: surat,
+      });
+    } catch (error) {
+      _next(error);
+    }
+  },
+
+  RejectDeleteSurat: async (
+    req: Request,
+    res: Response,
+    _next: NextFunction
+  ): Promise<void> => {
+    const { id } = req.params;
+
+    try {
+      const surat = await SuratService.RejectDeleteSurat(id);
+
+      res.status(200).json({
+        success: true,
+        message: "Request to delete surat sent successfully",
+        data: surat,
       });
     } catch (error) {
       _next(error);

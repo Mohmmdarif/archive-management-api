@@ -7,8 +7,20 @@ export async function seedKriteriaSurat() {
       keterangan: "Surat yang berisi permohonan",
     },
     {
-      nama_kriteria: "Edaran",
-      keterangan: "Surat yang berisi edaran",
+      nama_kriteria: "Keputusan",
+      keterangan: "Surat yang berisi keputusan",
+    },
+    {
+      nama_kriteria: "Riset",
+      keterangan: "Surat pengajuan riset",
+    },
+    {
+      nama_kriteria: "Undangan",
+      keterangan: "Surat yang berisi undangan",
+    },
+    {
+      nama_kriteria: "Keterangan",
+      keterangan: "Surat yang berisi keterangan",
     },
   ];
 

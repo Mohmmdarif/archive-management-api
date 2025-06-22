@@ -29,6 +29,12 @@ router.get(
   DashboardController.GetDisposisiCount
 );
 
+router.get(
+  "/ajuan-penghapusan/count",
+  verifyToken,
+  DashboardController.GetAjuanPenghapusanCount
+);
+
 router.get("/surat/today", verifyToken, DashboardController.GetSuratToday);
 
 export default router;

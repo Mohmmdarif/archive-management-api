@@ -62,6 +62,16 @@ export const DashboardRepository = {
     return filteredSurat.length;
   },
 
+  GetAjuanPenghapusanCount: async () => {
+    const ajuanPenghapusanCount = await prisma.surat.findMany({
+      where: {
+        is_deleted: false,
+        status_penghapusan_surat: "REQUESTED",
+      },
+    });
+    return ajuanPenghapusanCount.length;
+  },
+
   GetSuratToday: async () => {
     const suratToday = await prisma.surat.findMany({
       where: {

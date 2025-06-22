@@ -31,6 +31,16 @@ export const DashboardService = {
     }
   },
 
+  GetAjuanPenghapusanCount: async () => {
+    try {
+      const ajuanPenghapusanCount =
+        await DashboardRepository.GetAjuanPenghapusanCount();
+      return ajuanPenghapusanCount;
+    } catch (error) {
+      throw new CustomError(500, "Internal Server Error");
+    }
+  },
+
   GetSuratToday: async () => {
     try {
       const suratToday = await DashboardRepository.GetSuratToday();

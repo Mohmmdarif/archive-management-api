@@ -58,6 +58,25 @@ export const DashboardController = {
     }
   },
 
+  GetAjuanPenghapusanCount: async (
+    req: Request,
+    res: Response,
+    _next: NextFunction
+  ) => {
+    try {
+      const ajuanPenghapusanCount =
+        await DashboardService.GetAjuanPenghapusanCount();
+
+      res.status(200).json({
+        success: true,
+        message: "Get ajuan penghapusan count successfully",
+        data: ajuanPenghapusanCount,
+      });
+    } catch (error) {
+      _next(error);
+    }
+  },
+
   GetSuratToday: async (req: Request, res: Response, _next: NextFunction) => {
     try {
       const suratToday = await DashboardService.GetSuratToday();

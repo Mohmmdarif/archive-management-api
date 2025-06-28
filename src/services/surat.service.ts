@@ -43,7 +43,6 @@ export const SuratService = {
       // Upload file ke Cloudinary
       const uploadResult: any = await handleUpload(fileBuffer, fileName);
 
-      console.log("Cloudinary upload result:", uploadResult);
       const response = await fetch(`${BASE_URL_MODEL_API}/file`, {
         method: "POST",
         headers: {
@@ -102,7 +101,6 @@ export const SuratService = {
     id_user_pengaju_surat: string
   ) => {
     try {
-      console.log("Requesting delete surat with ID:", id);
       const surat = await SuratRepository.FindById(id);
 
       if (!surat) {

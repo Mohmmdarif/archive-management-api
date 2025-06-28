@@ -91,54 +91,6 @@ export const DisposisiRepository = {
     });
   },
 
-  // FindByUserPenerima: async (idUser: string) => {
-  //   return await prisma.surat_Masuk.findMany({
-  //     orderBy: { tanggal_ajuan_disposisi: "desc" },
-  //     where: {
-  //       disposisi: {
-  //         some: {
-  //           penerima: {
-  //             id: idUser,
-  //           },
-  //         },
-  //       },
-  //     },
-  //     include: {
-  //       disposisi: {
-  //         include: {
-  //           pengaju: {
-  //             select: {
-  //               id: true,
-  //               nip: true,
-  //               nama_lengkap: true,
-  //               email: true,
-  //               role_id: true,
-  //               jabatan: true,
-  //               status_aktif: true,
-  //               created_at: true,
-  //               updated_at: true,
-  //             },
-  //           },
-  //           penerima: {
-  //             select: {
-  //               id: true,
-  //               nip: true,
-  //               nama_lengkap: true,
-  //               email: true,
-  //               role_id: true,
-  //               jabatan: true,
-  //               status_aktif: true,
-  //               created_at: true,
-  //               updated_at: true,
-  //             },
-  //           },
-  //           status_disposisi: true,
-  //         },
-  //       },
-  //     },
-  //   });
-  // },
-
   FindByUserPenerima: async (idUser: string) => {
     const allSurat = await prisma.surat_Masuk.findMany({
       include: {

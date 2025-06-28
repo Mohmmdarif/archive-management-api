@@ -127,8 +127,7 @@ model Surat {
   surat_keluar Surat_Keluar[]
   Surat_Masuk  Surat_Masuk[]
 
-  ActivityLogDeletion ActivityLogDeletion[]
-  is_deleted          Boolean               @default(false)
+  is_deleted Boolean @default(false)
 }
 
 model Surat_Keluar {
@@ -170,13 +169,22 @@ enum StatusPenghapusan {
 
 model ActivityLogDeletion {
   id         String   @id @default(cuid())
-  id_surat   String
-  surat      Surat    @relation(fields: [id_surat], references: [id])
+  id_surat   String?
   id_user    String
   user       User     @relation(fields: [id_user], references: [id])
   status     String // "REQUESTED", "APPROVED", "REJECTED"
   alasan     String?
   created_at DateTime @default(now())
+
+  no_surat       String?
+  perihal_surat  String?
+  tanggal_surat  DateTime?
+  pengarsip      String?
+  pengirim_surat String?
+  penerima_surat String?
+  type_surat     Int?
+  jenis_surat    Int?
+  kriteria_surat Int?
 }
 
 model Disposisi {

@@ -1,5 +1,6 @@
 import prisma from "../db";
 import { ISurat } from "../interfaces/surat.interface";
+import { CustomError } from "../utils/customError";
 
 export const SuratRepository = {
   Create: async (payload: ISurat) => {
@@ -113,19 +114,6 @@ export const SuratRepository = {
   FindDeleteHistoryByUser: async (id_user: string) => {
     const logsDeletion = await prisma.activityLogDeletion.findMany({
       where: { id_user },
-      include: {
-        surat: {
-          select: {
-            id: true,
-            no_surat: true,
-            perihal_surat: true,
-            id_kriteria_surat: true,
-            tanggal_surat: true,
-            status_penghapusan_surat: true,
-            is_deleted: true,
-          },
-        },
-      },
       orderBy: {
         created_at: "desc",
       },
@@ -186,7 +174,12 @@ export const SuratRepository = {
     alasan_penghapusan: string,
     id_user_pengaju: string
   ) => {
-    const surat = await prisma.surat.update({
+    const surat = await SuratRepository.FindById(id);
+
+    if (!surat) throw new CustomError(404, "Surat tidak ditemukan");
+
+    // Update status permintaan delete
+    await prisma.surat.update({
       where: { id },
       data: {
         alasan_penghapusan_surat: alasan_penghapusan,
@@ -195,52 +188,68 @@ export const SuratRepository = {
       },
     });
 
+    // Simpan log + snapshot surat
     await prisma.activityLogDeletion.create({
       data: {
         id_surat: id,
         id_user: id_user_pengaju,
         status: "REQUESTED",
         alasan: alasan_penghapusan,
+
+        // snapshot fields
+        no_surat: surat.no_surat,
+        perihal_surat: surat.perihal_surat,
+        tanggal_surat: surat.tanggal_surat,
+        pengarsip: surat.pengarsip,
+        pengirim_surat: surat.pengirim_surat,
+        penerima_surat: surat.penerima_surat,
+        type_surat: surat.id_type_surat,
+        jenis_surat: surat.id_jenis_surat,
+        kriteria_surat: surat.id_kriteria_surat,
       },
     });
-    return surat;
   },
 
   ApproveDelete: async (id: string) => {
-    const surat = await prisma.surat.update({
-      where: { id },
-      data: {
-        status_penghapusan_surat: "APPROVED",
-        is_deleted: true,
-      },
-    });
+    const result = await prisma.$transaction(async (prisma) => {
+      // Update status log sebelum surat dihapus
+      await prisma.activityLogDeletion.updateMany({
+        where: {
+          id_surat: id,
+          status: "REQUESTED",
+        },
+        data: {
+          status: "APPROVED",
+        },
+      });
 
-    await prisma.activityLogDeletion.updateMany({
-      where: { id_surat: id, status: "REQUESTED" },
-      data: {
-        status: "APPROVED",
-      },
-    });
+      // Hapus surat (beserta data terkait)
+      const deletedSurat = await SuratRepository.Delete(id);
 
-    return surat;
+      return deletedSurat;
+    });
+    return result;
   },
 
   RejectDelete: async (id: string) => {
-    const surat = await prisma.surat.update({
-      where: { id },
-      data: {
-        status_penghapusan_surat: "REJECTED",
-      },
-    });
+    const result = await prisma.$transaction(async (prisma) => {
+      const surat = await prisma.surat.update({
+        where: { id },
+        data: {
+          status_penghapusan_surat: "REJECTED",
+        },
+      });
 
-    await prisma.activityLogDeletion.updateMany({
-      where: { id_surat: id, status: "REQUESTED" },
-      data: {
-        status: "REJECTED",
-      },
-    });
+      await prisma.activityLogDeletion.updateMany({
+        where: { id_surat: id, status: "REQUESTED" },
+        data: {
+          status: "REJECTED",
+        },
+      });
 
-    return surat;
+      return surat;
+    });
+    return result;
   },
 
   Delete: async (id: string) => {

@@ -4,7 +4,6 @@ import { CustomError } from "../utils/customError";
 import { createSuratSchema } from "../utils/validations/surat.validation";
 import { ISurat } from "../interfaces/surat.interface";
 import * as yup from "yup";
-import prisma from "../db";
 
 export const SuratController = {
   GetAllSurat: async (req: Request, res: Response, _next: NextFunction) => {
